@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
-from views import get_all_entries
+from views import get_all_entries, get_single_entry
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -41,8 +41,7 @@ class HandleRequests(BaseHTTPRequestHandler):
 
             if resource == "entries":
                 if id is not None:
-                    # response = get_single_animal(id)
-                    pass
+                    response = get_single_entry(id)
                 else:
                     response = get_all_entries()
             # elif resource == "customers":

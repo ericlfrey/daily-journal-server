@@ -58,3 +58,32 @@ def get_all_entries():
             # entries.append(customer.__dict__)
 
     return entries
+
+
+def get_single_entry(id):
+    """gets a single entry"""
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Use a ? parameter to inject a variable's value
+        # into the SQL statement.
+        db_cursor.execute("""
+        SELECT
+            e.id,
+            e.concept,
+            e.entry,
+            e.mood_id,
+            e.date
+        FROM entries e
+        WHERE e.id = ?
+        """, (id, ))
+
+        # Load the single result into memory
+        data = db_cursor.fetchone()
+
+        # Create an animal instance from the current row
+        entry = Entry(data['id'], data['concept'], data['entry'],
+                      data['mood_id'], data['date'])
+
+        return entry.__dict__

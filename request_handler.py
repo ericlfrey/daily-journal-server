@@ -79,95 +79,95 @@ class HandleRequests(BaseHTTPRequestHandler):
     # Here's a method on the class that overrides the parent's method.
     # It handles any POST request.
 
-    def do_POST(self):
-        """Handles POST requests to the server"""
+    # def do_POST(self):
+    #     """Handles POST requests to the server"""
 
-        # Set response code to 'Created'
-        self._set_headers(201)
-        content_len = int(self.headers.get('content-length', 0))
-        post_body = self.rfile.read(content_len)
+    #     # Set response code to 'Created'
+    #     self._set_headers(201)
+    #     content_len = int(self.headers.get('content-length', 0))
+    #     post_body = self.rfile.read(content_len)
 
-        # Convert JSON string to a Python dictionary
-        post_body = json.loads(post_body)
+    #     # Convert JSON string to a Python dictionary
+    #     post_body = json.loads(post_body)
 
-        # Parse the URL
-        (resource, id) = self.parse_url(self.path)
+    #     # Parse the URL
+    #     (resource, id) = self.parse_url(self.path)
 
-        # Initialize new object - dictionary?
-        new_animal = None
-        new_location = None
-        new_employee = None
-        new_customer = None
+    #     # Initialize new object - dictionary?
+    #     new_animal = None
+    #     new_location = None
+    #     new_employee = None
+    #     new_customer = None
 
-        # Add a new animal to the list. Don't worry about
-        # the orange squiggle, you'll define the create_animal
-        # function next.
-        if resource == "animals":
-            new_animal = create_animal(post_body)
-            self.wfile.write(json.dumps(new_animal).encode())
+    #     # Add a new animal to the list. Don't worry about
+    #     # the orange squiggle, you'll define the create_animal
+    #     # function next.
+    #     if resource == "animals":
+    #         new_animal = create_animal(post_body)
+    #         self.wfile.write(json.dumps(new_animal).encode())
 
-        if resource == "locations":
-            new_location = create_location(post_body)
-            self.wfile.write(json.dumps(new_location).encode())
+    #     if resource == "locations":
+    #         new_location = create_location(post_body)
+    #         self.wfile.write(json.dumps(new_location).encode())
 
-        if resource == "employees":
-            new_employee = create_employee(post_body)
-            self.wfile.write(json.dumps(new_employee).encode())
+    #     if resource == "employees":
+    #         new_employee = create_employee(post_body)
+    #         self.wfile.write(json.dumps(new_employee).encode())
 
-        if resource == "customers":
-            new_customer = create_customer(post_body)
-            self.wfile.write(json.dumps(new_customer).encode())
+    #     if resource == "customers":
+    #         new_customer = create_customer(post_body)
+    #         self.wfile.write(json.dumps(new_customer).encode())
 
-    # A method that handles any PUT request.
+    # # A method that handles any PUT request.
 
-    def do_PUT(self):
-        """Handles PUT requests to the server"""
-        content_len = int(self.headers.get('content-length', 0))
-        post_body = self.rfile.read(content_len)
-        post_body = json.loads(post_body)
+    # def do_PUT(self):
+    #     """Handles PUT requests to the server"""
+    #     content_len = int(self.headers.get('content-length', 0))
+    #     post_body = self.rfile.read(content_len)
+    #     post_body = json.loads(post_body)
 
-        # Parse the URL
-        (resource, id) = self.parse_url(self.path)
+    #     # Parse the URL
+    #     (resource, id) = self.parse_url(self.path)
 
-        success = False
+    #     success = False
 
-        # Update a single animal in the list
-        if resource == "animals":
-            success = update_animal(id, post_body)
-        elif resource == "locations":
-            update_location(id, post_body)
-        elif resource == "employees":
-            update_employee(id, post_body)
-        elif resource == "customers":
-            update_customer(id, post_body)
+    #     # Update a single animal in the list
+    #     if resource == "animals":
+    #         success = update_animal(id, post_body)
+    #     elif resource == "locations":
+    #         update_location(id, post_body)
+    #     elif resource == "employees":
+    #         update_employee(id, post_body)
+    #     elif resource == "customers":
+    #         update_customer(id, post_body)
 
-        if success:
-            self._set_headers(204)
-        else:
-            self._set_headers(404)
+    #     if success:
+    #         self._set_headers(204)
+    #     else:
+    #         self._set_headers(404)
 
-        self.wfile.write("".encode())
+    #     self.wfile.write("".encode())
 
-    def do_DELETE(self):
-        """Handles DELETE requests to server"""
-        # set a 204 response code
-        self._set_headers(204)
+    # def do_DELETE(self):
+    #     """Handles DELETE requests to server"""
+    #     # set a 204 response code
+    #     self._set_headers(204)
 
-        # Parse the URL
-        (resource, id) = self.parse_url(self.path)
+    #     # Parse the URL
+    #     (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
-        if resource == "animals":
-            delete_animal(id)
-        if resource == "locations":
-            delete_location(id)
-        if resource == "employees":
-            delete_employee(id)
-        if resource == "customers":
-            delete_customer(id)
+    #     # Delete a single animal from the list
+    #     if resource == "animals":
+    #         delete_animal(id)
+    #     if resource == "locations":
+    #         delete_location(id)
+    #     if resource == "employees":
+    #         delete_employee(id)
+    #     if resource == "customers":
+    #         delete_customer(id)
 
-        # Encode the new animal and send in a response
-        self.wfile.write("".encode())
+    #     # Encode the new animal and send in a response
+    #     self.wfile.write("".encode())
 
     def _set_headers(self, status):
         # Notice this Docstring also includes information about the arguments passed to the function

@@ -30,3 +30,26 @@ SELECT
     e.date
 FROM entries e
 WHERE e.entry LIKE '%java%' OR e.concept LIKE '%java%'
+
+SELECT
+      e.id,
+      e.concept,
+      e.entry,
+      e.mood_id,
+      e.date,
+      m.label mood
+  FROM entries e
+  JOIN moods m
+      ON m.id = e.mood_id
+
+SELECT
+            e.id,
+            e.concept,
+            e.entry,
+            e.mood_id,
+            e.date,
+            m.label mood
+        FROM entries e
+        JOIN moods m
+            ON m.id = e.mood_id
+        WHERE e.id = 1

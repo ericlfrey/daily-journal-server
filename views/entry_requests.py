@@ -18,8 +18,11 @@ def get_all_entries():
             e.concept,
             e.entry,
             e.mood_id,
-            e.date
+            e.date,
+            m.label mood
         FROM entries e
+        JOIN moods m
+            ON m.id = e.mood_id
         """)
 
         # Initialize an empty list to hold all animal representations
@@ -32,8 +35,19 @@ def get_all_entries():
         for row in dataset:
 
             # Create an animal instance from the current row
-            entry = Entry(row['id'], row['concept'], row['entry'], row['mood_id'],
-                          row['date'])
+            entry = Entry(
+                row['id'],
+                row['concept'],
+                row['entry'],
+                row['mood_id'],
+                row['date']
+            )
+            mood = Mood(
+                row['mood_id'],
+                row['mood']
+            )
+
+            entry.mood = mood.__dict__
 
             entries.append(entry.__dict__)
 
@@ -54,8 +68,11 @@ def get_single_entry(id):
             e.concept,
             e.entry,
             e.mood_id,
-            e.date
+            e.date,
+            m.label mood
         FROM entries e
+        JOIN moods m
+            ON m.id = e.mood_id
         WHERE e.id = ?
         """, (id, ))
 
@@ -63,8 +80,20 @@ def get_single_entry(id):
         data = db_cursor.fetchone()
 
         # Create an animal instance from the current row
-        entry = Entry(data['id'], data['concept'], data['entry'],
-                      data['mood_id'], data['date'])
+        entry = Entry(
+            data['id'],
+            data['concept'],
+            data['entry'],
+            data['mood_id'],
+            data['date']
+        )
+
+        mood = Mood(
+            data['mood_id'],
+            data['mood']
+        )
+
+        entry.mood = mood.__dict__
 
         return entry.__dict__
 

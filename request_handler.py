@@ -7,6 +7,7 @@ from views import (
     get_all_moods,
     get_entries_by_search,
     create_entry,
+    update_entry,
     delete_entry
 )
 
@@ -122,33 +123,33 @@ class HandleRequests(BaseHTTPRequestHandler):
 
     # # A method that handles any PUT request.
 
-    # def do_PUT(self):
-    #     """Handles PUT requests to the server"""
-    #     content_len = int(self.headers.get('content-length', 0))
-    #     post_body = self.rfile.read(content_len)
-    #     post_body = json.loads(post_body)
+    def do_PUT(self):
+        """Handles PUT requests to the server"""
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
 
-    #     # Parse the URL
-    #     (resource, id) = self.parse_url(self.path)
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
 
-    #     success = False
+        success = False
 
-    #     # Update a single animal in the list
-    #     if resource == "animals":
-    #         success = update_animal(id, post_body)
-    #     elif resource == "locations":
-    #         update_location(id, post_body)
-    #     elif resource == "employees":
-    #         update_employee(id, post_body)
-    #     elif resource == "customers":
-    #         update_customer(id, post_body)
+        # Update a single animal in the list
+        if resource == "entries":
+            success = update_entry(id, post_body)
+        # elif resource == "locations":
+        #     update_location(id, post_body)
+        # elif resource == "employees":
+        #     update_employee(id, post_body)
+        # elif resource == "customers":
+        #     update_customer(id, post_body)
 
-    #     if success:
-    #         self._set_headers(204)
-    #     else:
-    #         self._set_headers(404)
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
 
-    #     self.wfile.write("".encode())
+        self.wfile.write("".encode())
 
     def do_DELETE(self):
         """Handles DELETE requests to server"""
@@ -190,10 +191,14 @@ class HandleRequests(BaseHTTPRequestHandler):
         """
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods',
-                         'GET, POST, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers',
-                         'X-Requested-With, Content-Type, Accept')
+        self.send_header(
+            'Access-Control-Allow-Methods',
+            'GET, POST, PUT, DELETE'
+        )
+        self.send_header(
+            'Access-Control-Allow-Headers',
+            'X-Requested-With, Content-Type, Accept'
+        )
         self.end_headers()
 
 

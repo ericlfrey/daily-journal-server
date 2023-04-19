@@ -171,6 +171,37 @@ def create_entry(new_entry):
     return new_entry
 
 
+def update_entry(id, new_entry):
+    """Updates Entry with Replacement"""
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE entries
+            SET
+                concept = ?,
+                entry = ?,
+                mood_id = ?,
+                date = ?
+        WHERE id = ?
+        """, (
+            new_entry['concept'],
+            new_entry['entry'],
+            new_entry['mood_id'],
+            new_entry['date'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
+
+
 def delete_entry(id):
     """Deletes single entry"""
     with sqlite3.connect("./dailyjournal.sqlite3") as conn:

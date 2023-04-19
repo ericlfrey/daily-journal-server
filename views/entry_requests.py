@@ -98,17 +98,6 @@ def get_single_entry(id):
         return entry.__dict__
 
 
-def delete_entry(id):
-    """Deletes single entry"""
-    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
-        db_cursor = conn.cursor()
-
-        db_cursor.execute("""
-        DELETE FROM entries
-        WHERE id = ?
-        """, (id, ))
-
-
 def get_entries_by_search(search_param):
     """gets all the entries"""
     # Open a connection to the database
@@ -140,9 +129,54 @@ def get_entries_by_search(search_param):
         for row in dataset:
 
             # Create an animal instance from the current row
-            entry = Entry(row['id'], row['concept'], row['entry'], row['mood_id'],
-                          row['date'])
+            entry = Entry(
+                row['id'],
+                row['concept'],
+                row['entry'],
+                row['mood_id'],
+                row['date']
+            )
 
             entries.append(entry.__dict__)
 
     return entries
+
+
+def create_entry(new_entry):
+    """Creates a new entry"""
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO entries
+            ( concept, entry, mood_id, date )
+        VALUES
+            ( ?, ?, ?, ? );
+        """, (
+            new_entry['concept'],
+            new_entry['entry'],
+            new_entry['mood_id'],
+            new_entry['date'], ))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the animal dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_entry['id'] = id
+
+    return new_entry
+
+
+def delete_entry(id):
+    """Deletes single entry"""
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM entries
+        WHERE id = ?
+        """, (id, ))

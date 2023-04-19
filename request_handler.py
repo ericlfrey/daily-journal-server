@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
-from views import get_all_entries, get_single_entry
+from views import get_all_entries, get_single_entry, get_all_moods, get_entries_by_search
 
 
 class HandleRequests(BaseHTTPRequestHandler):
@@ -44,11 +44,8 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_entry(id)
                 else:
                     response = get_all_entries()
-            # elif resource == "customers":
-            #     if id is not None:
-            #         response = get_single_customer(id)
-            #     else:
-            #         response = get_all_customers()
+            elif resource == "moods":
+                response = get_all_moods()
             # elif resource == "employees":
             #     if id is not None:
             #         response = get_single_employee(id)
@@ -63,9 +60,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         else:  # There is a ? in the path, run the query param functions
             (resource, query) = parsed
 
-            # see if the query dictionary has an email key
-            # if query.get('email') and resource == 'customers':
-            #     response = get_customers_by_email(query['email'][0])
+            if resource == 'entries':
+                response = get_entries_by_search(query['q'][0])
             # elif query.get('location_id') and resource == 'animals':
             #     response = get_animals_by_location(query['location_id'][0])
             # elif query.get('location_id') and resource == 'employees':
